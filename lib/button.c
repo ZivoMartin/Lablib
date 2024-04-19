@@ -1,6 +1,6 @@
 #include "../include/settings.h"
 
-Button* create_button(Lablib* lablib, float rx, float ry, float rw, float rh, char* text, bool is_path, 
+Button* create_button(Lablib* lablib, float rx, float ry, float rw, float rh, const char* text, bool is_path, 
                       void (*act)(Button* b)) {
     Button* res = malloc(sizeof(Button));
     res->color = lablib_create_color(DEFAULT_COLOR_BG_BUTTON, DEFAULT_BUTTON_OPPACITY);
@@ -139,7 +139,7 @@ bool try_to_click(Button* b, SDL_Point c) {
     compute_button_decal(b, &decalWidth, &decalHeight);
     if (c.x > decalWidth && c.x < decalWidth+button_width(b) && 
          c.y > decalHeight && c.y < decalHeight + button_height(b)) {
-            (*b->action)(b);
+			if (b->action)(*b->action)(b);
             return true;
         }
 
@@ -195,7 +195,7 @@ void button_set_cursor_active(Button* b) {
     cursor_change_activity(button_get_cursor(b), true);
 }
 
-char* button_get_text(Button* b){
+const char* button_get_text(Button* b){
     return b->text;
 }
 

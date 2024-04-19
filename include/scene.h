@@ -8,7 +8,13 @@
  * @details The button array can contains input, its not a problem at all
  * @return The scene
  */
-Scene* create_scene(Button** buttons, int nb_buttons);
+Scene* create_scene(Lablib* lablib, int nb_buttons);
+
+void scene_add_button(Scene* scene,  float rx, float ry, float rw, float rh, const char* path, bool is_path, void(*act)(Button* b));
+
+SceneI scene_id(Scene* scene);
+
+int scene_current_nb_button(Scene* scene);
 
 /**
  * @brief Return the number of button of the scene

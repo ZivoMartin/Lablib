@@ -1,5 +1,11 @@
 #include "../include/settings.h"
 
+int Lablib_PollEvent(Lablib* lablib, SDL_Event* e) {
+	int stop_code = SDL_PollEvent(e);
+	if (stop_code) lablib_process(lablib, e);
+	return stop_code;
+}
+
 
 void lablib_kpress(Lablib* lablib, char c) {
   for(int i=0; i<lablib_nb_button(lablib); i++) {
@@ -18,7 +24,28 @@ void lablib_click_release(Lablib* lablib) {
   button_desactivate_cursor(lablib_get_active_cursor(lablib));
 }
 
+Button* lablib_get_active_cursor(Lablib* lablib) {
+  for(int i = 0; i<lablib_nb_button(lablib); i++) {
+    Button* b = lablib_get_button(lablib, i);
+    if (cursor_is_active(button_get_cursor(b))) return b;
+  }
+  return NULL;
+}
+
+SceneI lablib_add_scene(Lablib* lablib, Scene* scene) {
+	SceneI i = lablib->current_nb_scene;
+	lablib_check_scene(lablib, i);
+	lablib->scene_arr[i] = scene;
+	lablib->current_nb_scene += 1;
+	return i;
+}
+
+
 Lablib* lablib_init(SDL_Window *win, SDL_Renderer *ren, int nb_scene) {
+	if (nb_scene == 0) {
+		fprintf(stderr, "The final number of scene can't be zero");
+		exit(1);
+	}
 	Lablib *lablib = malloc(sizeof(struct Lablib_t));
 	SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_BLEND);
 	lablib->ren = ren;
@@ -27,7 +54,9 @@ Lablib* lablib_init(SDL_Window *win, SDL_Renderer *ren, int nb_scene) {
 	lablib->font = cp(TTF_OpenFont(FONT, FONTSIZE));
 	TTF_SetFontStyle(lablib->font, TTF_STYLE_NORMAL);
 	lablib->nb_scene = nb_scene;
+	lablib->current_scene = 0;
 	lablib->scene_arr = malloc(sizeof(Scene*)*nb_scene);
+	lablib->current_nb_scene = 0;
 	return lablib;
 }
 
@@ -41,7 +70,7 @@ void lablib_new_click(Lablib* lablib) {
 }
 
 void lablib_destroy(Lablib* lablib){
-	for(SceneIndex i=0; i<lablib_nb_scene(lablib); i++) {
+	for(SceneI i=0; i<lablib_nb_scene(lablib); i++) {
 		destroy_scene(lablib_get_scene(lablib, i));
 	}
 	free(lablib->scene_arr);
@@ -52,11 +81,11 @@ TTF_Font* lablib_get_font(Lablib* lablib) {
 	return lablib->font;
 }
 
-SDL_Window* lab_lib_win(Lablib* lablib) {
+SDL_Window* lablib_win(Lablib* lablib) {
 	return lablib->win;
 }
 
-SDL_Renderer* lablib_ren(Lablib* lablib) {
+SDL_Renderer* lablib_get_ren(Lablib* lablib) {
 	return lablib->ren;
 }
 
@@ -71,24 +100,28 @@ void set_last_coordinate(Lablib* lablib, SDL_Point mouse) {
 }
 
 // Check if the given scene index is valid
-void lablib_check_scene(Lablib* lablib, SceneIndex i) {
+void lablib_check_scene(Lablib* lablib, SceneI i) {
 	if (i == lablib_nb_scene(lablib)) {
     fprintf(stderr, "Scene index out of range\n");
     exit(EXIT_FAILURE);
   }
 }
 
-void change_scene(Lablib* lablib, SceneIndex new_scene) {
+unsigned int lablib_nb_scene(Lablib* lablib) {
+	return lablib->nb_scene;
+}
+
+void change_scene(Lablib* lablib, SceneI new_scene) {
   lablib_check_scene(lablib, new_scene);
   lablib->current_scene = new_scene;
 }
 
-Scene* lablib_get_scene(Lablib* lablib, SceneIndex i) {
+Scene* lablib_get_scene(Lablib* lablib, SceneI i) {
   lablib_check_scene(lablib, i);
   return lablib->scene_arr[i];
 }
 
-SceneIndex lablib_get_scene_index(Lablib* lablib)  {
+SceneI lablib_get_scene_index(Lablib* lablib)  {
   return lablib->current_scene;
 }
 
@@ -117,7 +150,16 @@ Button* lablib_get_active_input(Lablib* lablib) {
   return NULL;
 }
 
-Button* lablib_get_active_cursor(Lablib* lablib) {
+void lablib_activate_input(Lablib* lablib) {
+  Button* b = lablib_get_active_input(lablib);
+  if(b) {
+    Input* inp = button_get_input(b);
+    input_set_activity(inp, false);
+    (*inp->action)(b);
+  }
+}
+
+Button* lablib_active_cursor(Lablib* lablib) {
   for(int i = 0; i<lablib_nb_button(lablib); i++) {
     Button* b = lablib_get_button(lablib, i);
     if (cursor_is_active(button_get_cursor(b))) return b;
@@ -147,19 +189,19 @@ void* cp(void* p) {
 }
 
 
-SDL_Color create_color(int r, int g, int b, int a) {
+SDL_Color lablib_create_color(int r, int g, int b, int a) {
   return (SDL_Color) {r, g, b, a};
 }
 
 
-SDL_Rect init_rect(int x, int y, int w){
+SDL_Rect lablib_init_rect(int x, int y, int w){
   return (SDL_Rect){.h = w-1, .w = w-1, .x = x, .y = y};
 }
 
 
 
 void display_current_scene(Lablib* lablib){
-  SDL_RenderCopy(lablib_ren(lablib), scene_get_background(lablib_get_current_scene(lablib)), NULL, NULL);
+  SDL_RenderCopy(lablib_get_ren(lablib), scene_get_background(lablib_get_current_scene(lablib)), NULL, NULL);
 }
 
 
@@ -179,13 +221,13 @@ void lablib_render(Lablib *lablib) {
 void lablib_process(Lablib *lablib, SDL_Event *e) {
 	int w, h;
 	SDL_GetWindowSize(lablib_win(lablib) , &w, &h);
-	if (e->type == SDL_MOUSEBUTTONUP) 
-		lablib_click_release(lablib);
+	if (e->type == SDL_MOUSEBUTTONUP)
+		lablib_click_release(lablib); 
 	else if (e->type == SDL_MOUSEMOTION){
-		SDL_Point mouse;
-		SDL_GetMouseState(&mouse.x, &mouse.y);
-		lablib_mouse_move(lablib, mouse);
-	}else if (e->type == SDL_TEXTINPUT) 
+		/* SDL_Point mouse; */
+		/* SDL_GetMouseState(&mouse.x, &mouse.y); */
+		/* lablib_mouse_move(lablib, mouse); */
+    }else if (e->type == SDL_TEXTINPUT)
 		lablib_kpress(lablib, e->text.text[0]);
 	else if (e->type == SDL_MOUSEBUTTONDOWN) {
 		SDL_Point mouse;

@@ -18,7 +18,7 @@
  * @details The default text in an empty case is a single space.
  * @return the button.
  */
-Button* create_button(Lablib* lablib, float x, float y, float rw, float rh, char* text, bool is_path, void (*act)(Button* b));
+Button* create_button(Lablib* lablib, float x, float y, float rw, float rh, const char* text, bool is_path, void (*act)(Button* b));
 
 /**
  * @brief Change the display method of the button.
@@ -207,7 +207,7 @@ void button_change_textColor(Button* b, SDL_Color c);
  * @param b 
  * @return char* 
  */
-char* button_get_text(Button* b);
+const char* button_get_text(Button* b);
 
 /**
  * @brief Default function for displaying a button, simply displays the rect with the right size and position it on the screen.

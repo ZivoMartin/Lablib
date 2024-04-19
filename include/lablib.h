@@ -77,16 +77,16 @@ Button* lablib_get_button(Lablib* lablib, int index);
  * @param lablib The lablib
  * @return the index of the current scene
  */
-SceneIndex lablib_get_scene_index(Lablib* lablib);
+SceneI lablib_get_scene_index(Lablib* lablib);
 
 /**
  * @brief Get the ith scene
  * @param lablib The lablib
- * @param i The index of the scene by using the enum type SceneIndex
+ * @param i The index of the scene by using the enum type SceneI
  * @details If you want the current scene use get_current scene, use this function only if you want a specific one
  * @return The ith scene
  */
-Scene* lablib_get_scene(Lablib* lablib, SceneIndex i);
+Scene* lablib_get_scene(Lablib* lablib, SceneI i);
 
 /**
  * @brief Get the current scene, not his index but the pointer on the current scene itself
@@ -115,7 +115,7 @@ TTF_Font* lablib_get_font(Lablib* lablib);
  * @param new_scene The new scene
  * @details Care, this function take the INDEX of the new scene, not the scene itself.
  */
-void lablib_change_scene(Lablib* lablib, SceneIndex new_scene);
+void lablib_change_scene(Lablib* lablib, SceneI new_scene);
 
 /**
  * @brief handle the press of a key on the application
@@ -245,7 +245,15 @@ void display_current_scene(Lablib* lablib);
 /**
  * @brief Check if i is out of range, if it is we exit with an error message.
 */
-void check_scene(Lablib* lablib, SceneIndex i);
+void lablib_check_scene(Lablib* lablib, SceneI i);
+
+
+/**
+ * @brief Set a scene at the index i, exit if the scene index is out of range.
+*/
+SceneI lablib_add_scene(Lablib* lablib, Scene* scene);
+
+int Lablib_PollEvent(Lablib* lablib, SDL_Event* e);
 
 
 #endif

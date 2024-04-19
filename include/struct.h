@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>  // required to load transparent texture from PNG
-#include <SDL2/SDL_ttf.h>    // required to use TTF fonts
+#include <SDL_ttf.h>    // required to use TTF fonts
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -14,13 +14,14 @@ typedef struct Button Button;
 typedef struct Input Input;
 typedef struct Scene Scene;
 typedef struct Cursor Cursor;
-typedef unsigned int SceneIndex;
+typedef unsigned int SceneI;
 
 /**< Global environement of the game*/
 typedef struct Lablib_t {
 	int nb_scene;                   /** The total static number of scenes */
+	int current_nb_scene;
     Scene** scene_arr;     /**< A buffer for each scene of the game*/
-    SceneIndex current_scene;       /**< An index for get in constant time the current scene*/
+    SceneI current_scene;       /**< An index for get in constant time the current scene*/
     SDL_Texture* numbers[4][10];    /**< A buffer too store the constraints text numbers, there is digits for each colors and there is 4 colors*/
     TTF_Font* font;                 /**< The font used in the app*/
     SDL_Renderer* ren;              /**< The SDL renderer*/
@@ -31,9 +32,12 @@ typedef struct Lablib_t {
 
 /**< A scene is an abstract object with some labels, to display a scene we just have to iterate through the elements and display each of them*/
 struct Scene{
-  Button** buttons;         /**< The array of buttons of the scene */
-  int nb_buttons;           /**< The number of button of the scene */
-  SDL_Texture* background;  /**< The background of the scene, is an image in general, otherwise a default color*/
+	SceneI id;
+	Lablib* lablib;
+	Button** buttons;         /**< The array of buttons of the scene */
+	int nb_buttons;           /**< The number of button of the scene */
+	int current_nb_button;
+	SDL_Texture* background;  /**< The background of the scene, is an image in general, otherwise a default color*/
 };
 
 /**< The button struct is the heart of our app, basically a scene contains buttons and display each again and again,
@@ -42,7 +46,7 @@ resized when the app is resized. A button can have sublabbel like input or curso
 a cursor button activate the cursor.*/
 struct Button {
   Lablib* lablib;                   /**< The lablib */
-  char* text;                 /**< The current text of the button IF the button isn't an input*/
+  const char* text;                 /**< The current text of the button IF the button isn't an input*/
   SDL_Color color;            /**< The color of the button */
   float rx, ry, rw, rh;         /**< This is the data to safely and properly resize our button, rx represents
                               the x position of the button relatively too the width of the window. ry represents the position

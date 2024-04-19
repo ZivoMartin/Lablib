@@ -1,12 +1,32 @@
 #include "../include/settings.h"
 #include "assert.h"
 
-Scene* create_scene(Button** buttons, int nb_buttons) {
+Scene* create_scene(Lablib* lablib, int nb_button) {
     Scene* res = cp(malloc(sizeof(Scene)));
-    res->buttons = buttons;
-    res->nb_buttons = nb_buttons;
+	res->lablib = lablib;
+	res->buttons = malloc(sizeof(Button*)*nb_button);
+    res->nb_buttons = nb_button;
     res->background = NULL;
+	res->current_nb_button = 0;
+	res->id = lablib_add_scene(lablib, res);
     return res;
+}
+
+SceneI scene_id(Scene* scene) {
+	return scene->id;
+}
+
+int scene_current_nb_button(Scene* scene) {
+	return scene->current_nb_button;
+}
+
+void scene_add_button(Scene* scene, float rx, float ry, float rw, float rh, const char* path, bool is_path, void(*act)(Button* b)) {
+	if (scene_current_nb_button(scene) == scene_nb_buttons(scene)) {
+		fprintf(stderr, "To much button for a scene.");
+		exit(1);
+	}
+	scene->buttons[scene_current_nb_button(scene)] = create_button(scene->lablib, rx, ry, rw, rh, path, is_path, act);
+	scene->current_nb_button += 1;
 }
 
 
