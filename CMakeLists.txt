@@ -51,10 +51,11 @@ set(SDL2_ALL_LIBS ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY})
 
 set(CMAKE_C_FLAGS "-std=c99 -g -Wall --coverage")
 
-add_library(lablib lib/button.c lib/lablib.c lib/cursor.c lib/scene.c lib/input.c)
+
+
+add_library(lablib STATIC)
+
+# no need to add headers here, only sources are required
+target_sources(lablib PRIVATE lib/button.c lib/lablib.c lib/cursor.c lib/scene.c lib/input.c)
 
 include_directories(${SDL2_ALL_INC})
-add_executable(main main.c)
-target_link_libraries(main ${SDL2_ALL_LIBS} lablib)
-
-file(COPY res DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

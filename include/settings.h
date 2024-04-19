@@ -1,8 +1,7 @@
 #ifndef INCLUDE_INTERFACE_SAFE
 #define INCLUDE_INTERFACE_SAFE
 
-#define FONT "./res/atwriter.ttf"
-
+#define FONT "/home/martin/Travail/Gamacs/Lablib/res/atwriter.ttf"
 #define FONTSIZE 100
 #define RESIZE_CONST_RECT 0.4
 

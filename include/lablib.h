@@ -218,6 +218,8 @@ SDL_Color lablib_create_color(int r, int g, int b, int a);
  */
 void* cp(void* p);
 
+void cc(int c);
+
 /**
  * @brief Main loop: process the app, render the app and reloop
  * @param lablib The lablib

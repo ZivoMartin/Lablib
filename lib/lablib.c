@@ -111,7 +111,7 @@ unsigned int lablib_nb_scene(Lablib* lablib) {
 	return lablib->nb_scene;
 }
 
-void change_scene(Lablib* lablib, SceneI new_scene) {
+void lablib_change_scene(Lablib* lablib, SceneI new_scene) {
   lablib_check_scene(lablib, new_scene);
   lablib->current_scene = new_scene;
 }
@@ -180,14 +180,20 @@ int lablib_nb_button(Lablib* lablib) {
   return scene_nb_buttons(lablib_get_current_scene(lablib));
 }
 
-
 void* cp(void* p) {
-  if (!p) {
-    exit(1);
-  }
-  return p;
+	if (!p) {
+		fprintf(stderr, "SDL ERROR: %s\n", SDL_GetError());
+		exit(1);
+	}
+	return p;
 }
 
+void cc(int c) {
+	if (c < 0) {
+		fprintf(stderr, "SDL ERROR: %s\n", SDL_GetError());
+		exit(1);
+	}
+}
 
 SDL_Color lablib_create_color(int r, int g, int b, int a) {
   return (SDL_Color) {r, g, b, a};
