@@ -18,6 +18,7 @@ typedef unsigned int SceneI;
 
 /**< Global environement of the game*/
 typedef struct Lablib_t {
+	void* env;             /** The environement of the extern app. */
 	int nb_scene;                   /** The total static number of scenes */
 	int current_nb_scene;
     Scene** scene_arr;     /**< A buffer for each scene of the game*/

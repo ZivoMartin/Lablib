@@ -120,7 +120,7 @@ void input_actualise_texture(Input* inp) {
     SDL_Surface* surf = TTF_RenderText_Blended(lablib_get_font(lablib), txt, txt_color);  
     SDL_Texture* new_texture = SDL_CreateTextureFromSurface(ren, surf);
     SDL_FreeSurface(surf);
-    button_change_texture(button, new_texture);
+    button_change_direct_texture(button, new_texture);
 }
 
 int input_clock(Input* inp) {

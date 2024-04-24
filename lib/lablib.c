@@ -41,12 +41,13 @@ SceneI lablib_add_scene(Lablib* lablib, Scene* scene) {
 }
 
 
-Lablib* lablib_init(SDL_Window *win, SDL_Renderer *ren, int nb_scene) {
+Lablib* lablib_init(void* env, SDL_Window *win, SDL_Renderer *ren, int nb_scene) {
 	if (nb_scene == 0) {
 		fprintf(stderr, "The final number of scene can't be zero");
 		exit(1);
 	}
 	Lablib *lablib = malloc(sizeof(struct Lablib_t));
+	lablib->env = env;
 	SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_BLEND);
 	lablib->ren = ren;
 	lablib->win = win;
@@ -75,6 +76,10 @@ void lablib_destroy(Lablib* lablib){
 	}
 	free(lablib->scene_arr);
 	free(lablib);
+}
+
+void* lablib_get_env(Lablib* lablib) {
+	return lablib->env;
 }
 
 TTF_Font* lablib_get_font(Lablib* lablib) {

@@ -1,6 +1,6 @@
 #include "../include/settings.h"
 
-Button* create_button(Lablib* lablib, float rx, float ry, float rw, float rh, const char* text, bool is_path, 
+Button* create_button(Lablib* lablib, float rx, float ry, float rw, float rh, const char* text,
                       void (*act)(Button* b)) {
     Button* res = malloc(sizeof(Button));
     res->color = lablib_create_color(DEFAULT_COLOR_BG_BUTTON, DEFAULT_BUTTON_OPPACITY);
@@ -13,21 +13,26 @@ Button* create_button(Lablib* lablib, float rx, float ry, float rw, float rh, co
     res->action = act;
     res->input = NULL;
     res->cur = NULL;
-    SDL_Surface* surf;
     res->text = text;
     if (strcmp(text,"") == 0) text = EMPTY_TEXT;
-    if(!is_path){
-        surf = TTF_RenderText_Blended(lablib_get_font(lablib), text, lablib_create_color(WHITE_TEXT_COLOR, DEFAULT_TEXT_OPPACITY));  
-    } else {
-        res->color.a = NO_OPACITY;
-        surf = cp(IMG_Load(text));
-    }
-    res->texture = SDL_CreateTextureFromSurface(lablib_get_ren(lablib), surf);
-    SDL_FreeSurface(surf);
+	res->texture = NULL;
+	button_change_texture(res, text);
     return res;
 }
 
-void set_display(Button* b, void (*dis)(Button* b)) {
+void* button_get_env(Button* b) {
+	return lablib_get_env(button_get_lablib(b));
+}
+
+void button_change_direct_texture(Button* b, SDL_Texture* texture) {
+	b->texture = texture;
+}
+
+Lablib* button_get_lablib(Button* b) {
+	return b->lablib;
+}
+
+void button_set_display(Button* b, void (*dis)(Button* b)) {
     b->display = dis;
 }
 
@@ -161,9 +166,12 @@ void display_button(Button* b) {
 }
 
 
-void button_change_texture(Button* b, SDL_Texture* new_texture) {
+void button_change_texture(Button* b, const char* path) {
     SDL_DestroyTexture(b->texture);
-    b->texture = new_texture;
+	SDL_Surface* surf = IMG_Load(path);
+	if (!surf) surf = TTF_RenderText_Blended(lablib_get_font(button_get_lablib(b)), path, lablib_create_color(WHITE_TEXT_COLOR, DEFAULT_TEXT_OPPACITY));  
+    b->texture = SDL_CreateTextureFromSurface(lablib_get_ren(button_get_lablib(b)), surf);
+    SDL_FreeSurface(surf);
 }
 
 void default_display_button(Button* b) {

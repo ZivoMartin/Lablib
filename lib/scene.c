@@ -20,13 +20,15 @@ int scene_current_nb_button(Scene* scene) {
 	return scene->current_nb_button;
 }
 
-void scene_add_button(Scene* scene, float rx, float ry, float rw, float rh, const char* path, bool is_path, void(*act)(Button* b)) {
+Button* scene_add_button(Scene* scene, float rx, float ry, float rw, float rh, const char* path, void(*act)(Button* b)) {
 	if (scene_current_nb_button(scene) == scene_nb_buttons(scene)) {
 		fprintf(stderr, "To much button for a scene.");
 		exit(1);
 	}
-	scene->buttons[scene_current_nb_button(scene)] = create_button(scene->lablib, rx, ry, rw, rh, path, is_path, act);
+	Button* b = create_button(scene->lablib, rx, ry, rw, rh, path, act);
+	scene->buttons[scene_current_nb_button(scene)] = b;
 	scene->current_nb_button += 1;
+	return b;
 }
 
 

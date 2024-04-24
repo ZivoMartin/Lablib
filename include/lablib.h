@@ -10,6 +10,8 @@
 void lablib_render(Lablib * lablib);
 
 
+void* lablib_get_env(Lablib* lablib);
+
 /**
  * @brief Gonna process a single event
  * @param lablib The lablib
@@ -25,7 +27,7 @@ void lablib_process(Lablib * lablib, SDL_Event * e);
  * @details Set the game as game_default if the path is empty
  * @return The lablib
  */
-Lablib * lablib_init(SDL_Window* win, SDL_Renderer* ren, int nb_scene);
+Lablib * lablib_init(void* env, SDL_Window* win, SDL_Renderer* ren, int nb_scene);
 
 
 /**

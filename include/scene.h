@@ -1,5 +1,5 @@
-#ifndef SCENE_SAFE
-#define SCENE_SAFE
+#ifndef LABLIB_SCENE_SAFE
+#define LABLIB_SCENE_SAFE
 
 /**
  * @brief Allocate a scene and return it
@@ -10,7 +10,7 @@
  */
 Scene* create_scene(Lablib* lablib, int nb_buttons);
 
-void scene_add_button(Scene* scene,  float rx, float ry, float rw, float rh, const char* path, bool is_path, void(*act)(Button* b));
+Button* scene_add_button(Scene* scene,  float rx, float ry, float rw, float rh, const char* path, void(*act)(Button* b));
 
 SceneI scene_id(Scene* scene);
 
