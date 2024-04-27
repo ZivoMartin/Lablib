@@ -73,6 +73,8 @@ Lablib* button_lablib(Button* b);
  */
 int button_get_win_w(Button* b);
 
+void button_actualise_size(Button* b);
+
 /**
  * @brief get the height of the window using the lablib inside of the button.
  * @param b The button
@@ -262,4 +264,6 @@ void make_as_cursor(Button* b, float rh, void (*move_cursor_action)(Button* b), 
 
 
 void button_set_ry(Button* b, float new_ry);
+void button_set_rx(Button* b, float new_rx);
+
 #endif 

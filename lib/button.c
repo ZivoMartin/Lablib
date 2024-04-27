@@ -142,7 +142,7 @@ bool try_to_click(Button* b, SDL_Point c) {
     input_set_activity(button_get_input(b), false);
     int decalWidth, decalHeight;
     compute_button_decal(b, &decalWidth, &decalHeight);
-    if (c.x > decalWidth && c.x < decalWidth+button_width(b) && 
+	if (c.x > decalWidth && c.x < decalWidth+button_width(b) && 
          c.y > decalHeight && c.y < decalHeight + button_height(b)) {
 			if (b->action)(*b->action)(b);
             return true;
@@ -174,11 +174,15 @@ void button_change_texture(Button* b, const char* path) {
     SDL_FreeSurface(surf);
 }
 
+void button_actualise_size(Button* b) {
+	Lablib* lablib = button_lablib(b);
+	button_set_height(b, lablib_w_height(lablib)*button_rheight(b));
+	button_set_width(b,  lablib_w_width(lablib) *button_rwidth(b)); 
+}
+
 void default_display_button(Button* b) {
   Lablib* lablib = button_lablib(b);
-  button_set_height(b, lablib_w_height(lablib)*button_rheight(b));
-  button_set_width(b,  lablib_w_width(lablib) *button_rwidth(b)); 
-
+  button_actualise_size(b);
   int decalWidth, decalHeight;
   compute_button_decal(b, &decalWidth, &decalHeight);
   SDL_SetRenderDrawColor(lablib_get_ren(lablib), button_color(b)->r, button_color(b)->g, button_color(b)->b, button_color(b)->a);
@@ -217,4 +221,8 @@ void button_move_cursor(Button* b, SDL_Point pt) {
 
 void button_set_ry(Button* b, float new_ry) {
     b->ry = new_ry;
+}
+
+void button_set_rx(Button* b, float new_rx) {
+    b->rx = new_rx;
 }

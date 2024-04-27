@@ -40,7 +40,7 @@ void destroy_scene(Scene* scene);
 
 /**
  * @brief sets the background of the scene passed in paramter
- * @param lablib The lablibirement 
+ * @param lablib The Lablib
  * @param scene The scene
  * @param path the relative filepath towards the image to be loaded
  * @details if scene is null or the path is incorrect, the function does nothing and the background stays NULL
