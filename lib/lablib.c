@@ -10,9 +10,8 @@ int Lablib_PollEvent(Lablib* lablib, SDL_Event* e) {
 void lablib_kpress(Lablib* lablib, char c) {
   for(int i=0; i<lablib_nb_button(lablib); i++) {
     Input* inp = button_get_input(lablib_get_button(lablib, i));
-    if (input_is_active(inp)) {
+    if (input_is_active(inp)) 
       input_new_char(inp, c);
-    }
   }
 }
 
@@ -235,9 +234,9 @@ void lablib_process(Lablib *lablib, SDL_Event *e) {
 	if (e->type == SDL_MOUSEBUTTONUP)
 		lablib_click_release(lablib); 
 	else if (e->type == SDL_MOUSEMOTION){
-		/* SDL_Point mouse; */
-		/* SDL_GetMouseState(&mouse.x, &mouse.y); */
-		/* lablib_mouse_move(lablib, mouse); */
+		SDL_Point mouse;
+		SDL_GetMouseState(&mouse.x, &mouse.y);
+		lablib_mouse_move(lablib, mouse);
     }else if (e->type == SDL_TEXTINPUT)
 		lablib_kpress(lablib, e->text.text[0]);
 	else if (e->type == SDL_MOUSEBUTTONDOWN) {
