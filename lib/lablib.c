@@ -211,14 +211,12 @@ SDL_Rect lablib_init_rect(int x, int y, int w){
 
 
 void display_current_scene(Lablib* lablib){
-  SDL_RenderCopy(lablib_get_ren(lablib), scene_get_background(lablib_get_current_scene(lablib)), NULL, NULL);
+
 }
 
 
 void display_scenes(Lablib* lablib) {
-  display_current_scene(lablib);
-  for(int i = 0; i<lablib_nb_button(lablib); i++) 
-      display_button(lablib_get_button(lablib, i));  
+	scene_render(lablib_get_current_scene(lablib));
 }
 
 
