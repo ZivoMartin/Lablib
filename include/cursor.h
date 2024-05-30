@@ -15,8 +15,6 @@ void cursor_change_activity(Cursor* cur, bool act);
 
 void cursor_move(Cursor* cur, SDL_Point pt);
 
-SDL_Texture* cursor_get_texture(Cursor* cur);
-
 void cursor_set_height(Cursor* cur, int new_h);
 
 void cursor_set_width(Cursor* cur, int new_w);

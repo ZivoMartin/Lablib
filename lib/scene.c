@@ -26,7 +26,7 @@ void scene_render(Scene* scene) {
 	display_current_scene(lablib);
 	for(int i = 0; i<lablib_nb_button(lablib); i++) 
 		  display_button(lablib_get_button(lablib, i));
-	(*scene->user_render)(scene_get_extern(scene));
+	if (scene->user_render) (*scene->user_render)(scene_get_extern(scene));
 }
 
 void* scene_get_extern(Scene* scene) {

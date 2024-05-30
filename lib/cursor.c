@@ -25,7 +25,6 @@ int cursor_last_h(Cursor* cur) {
 
 void destroy_cursor(Cursor* cur) {
     if (!cur) return;
-    SDL_DestroyTexture(cursor_get_texture(cur));
     free(cur);
 }
 
