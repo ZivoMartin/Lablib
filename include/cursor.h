@@ -35,8 +35,6 @@ Button* cursor_button(Cursor* cur);
 
 Lablib* cursor_lablib(Cursor* cur);
 
-SDL_Texture* cursor_get_texture(Cursor* cur);
-
 void cursor_set_last_h(Cursor* cur, int last_h);
 
 

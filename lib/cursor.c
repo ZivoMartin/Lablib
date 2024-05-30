@@ -6,7 +6,6 @@ Cursor* create_cursor(Button* b, float rh, void (*move_cursor_action)(Button* b)
     Cursor* res = malloc(sizeof(Cursor));
     res->b = b;
     res->rh = rh;
-    res->text = NULL;
     res->rx = button_rx(b) + CURSOR_WIDTH/4;
     res->ry = button_ry(b) - rh/2;
     res->is_active = false;
@@ -15,9 +14,6 @@ Cursor* create_cursor(Button* b, float rh, void (*move_cursor_action)(Button* b)
     return res;
 }
 
-SDL_Texture* cursor_get_texture(Cursor* cur) {
-    return cur->text;
-}
 
 void cursor_set_last_h(Cursor* cur, int last_h) {
     cur->last_h = last_h;

@@ -12,8 +12,19 @@ Scene* create_scene(Lablib* lablib, int nb_buttons);
 
 Button* scene_add_button(Scene* scene,  float rx, float ry, float rw, float rh, const char* path, void(*act)(Button* b));
 
+/**
+ * @brief Returns the id of the scene
+ */
 SceneI scene_id(Scene* scene);
 
+/**
+ * @brief Returns the lablib
+ */
+Lablib* scene_get_lablib(Scene* scene);
+
+/**
+ * @brief Returns the current number of initialised buttons of the scene
+ */
 int scene_current_nb_button(Scene* scene);
 
 /**
@@ -45,7 +56,7 @@ void destroy_scene(Scene* scene);
  * @param path the relative filepath towards the image to be loaded
  * @details if scene is null or the path is incorrect, the function does nothing and the background stays NULL
  */
-void set_scene_background(Lablib* lablib, Scene* scene, const char* path);
+void set_scene_background(Scene* scene, const char* path);
 
 /**
  * @brief Returns the background of the scene passed in parameter
@@ -53,6 +64,17 @@ void set_scene_background(Lablib* lablib, Scene* scene, const char* path);
  * @return The texture representing the background of the scene, and NULL if it doesnt have one.
  */
 SDL_Texture* scene_get_background(Scene* scene);
+
+/**
+ * @brief Renders the entire scene and call the user render function
+*/
+void scene_render(Scene* scene);
+
+
+/**
+ * @brief Returns the user extern scene.
+*/
+void* scene_get_extern(Scene* scene);
 
 
 #endif
