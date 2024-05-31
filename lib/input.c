@@ -16,6 +16,7 @@ Input* create_input(Button* b, char* placeholder) {
         res->text[i] = ' ';
     }
     res->text[INPUT_MAX_LEN-1] = '\0';
+	make_as_input(b, res);
     return res;
 }
 
@@ -117,6 +118,7 @@ void input_actualise_texture(Input* inp) {
         txt = input_get_placeholder(inp);
         txt_color = input_get_paceholder_color(inp);
     }
+	printf("%s\n", txt);
     SDL_Surface* surf = TTF_RenderText_Blended(lablib_get_font(lablib), txt, txt_color);  
     SDL_Texture* new_texture = SDL_CreateTextureFromSurface(ren, surf);
     SDL_FreeSurface(surf);
